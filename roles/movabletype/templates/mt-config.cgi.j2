@@ -1,0 +1,31 @@
+AdminScript          {{ mt.adminscript }}
+AdminCGIPath         /mt/
+CGIPath              /mt/
+StaticWebPath        /mt-static/
+StaticFilePath       /var/www/movabletype/mt-static/
+
+ObjectDriver         DBI::mysql
+Database             {{ mt.db.name }}
+DBUser               {{ mt.db.user }}
+DBPassword           {{ mt.db.passwd }}
+DBHost               {{ dbserver }}
+
+PIDFilePath          /var/www/movabletype/movabletype.pid
+
+DefaultLanguage      ja
+DefaultTimezone      9
+
+BaseSitePath         /var/www/vhosts/
+
+TransparentProxyIPs  1
+
+DBUmask              0002
+HTMLUmask            0002
+UploadUmask          0002
+DirUmask             0002
+
+SearchThrottleSeconds 300
+SearchCacheTTL 300
+SearchMaxResults 100
+
+LocalPreviews 1

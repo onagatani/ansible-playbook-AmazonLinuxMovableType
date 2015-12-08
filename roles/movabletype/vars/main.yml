@@ -1,0 +1,4 @@
+runfile: |
+    cd /var/www/movabletype/ || exit 1
+    exec setuidgid apache envuidgid apache starman --workers=3 --listen :8080 --listen /var/www/movabletype/movabletype.sock --error-log=/var/www/movabletype/movabletype.log --pid=/var/www/movabletype/movabletype.pid /var/www/movabletype/mt.psgi
+

@@ -1,0 +1,33 @@
+# php
+- name: php is installed
+  yum: name={{ item }} state=present
+  with_items:
+   - php-cli
+   - php-common
+   - php-devel
+   - php-gd
+   - php-mbstring
+   - php-mcrypt
+   - php-mysql
+   - php-pdo
+   - php-pear-Net-SMTP
+   - php-pecl-apc
+   - php-pecl-apc-devel
+   - php-pecl-imagick
+   - php-pecl-memcache
+   - php-pecl-memcached
+   - php-xml
+  tags: php
+
+- name: php is configured
+  notify:
+    - restart httpd
+  lineinfile: dest="/etc/php.ini" state=present regexp="{{ item.regexp }}" line="{{ item.line }}" backrefs=yes
+  with_items:
+    - { regexp: '^\;date.timezone =$', line: 'date.timezone = Asia/Tokyo'} 
+    - { regexp: '^expose_php = On$', line: 'expose_php = Off'} 
+    - { regexp: '^\;error_log = php_errors.log$', line: 'error_log = /var/log/php_errors.log'} 
+    - { regexp: '^post_max_size = 8M', line: 'post_max_size = 32M'} 
+    - { regexp: '^upload_max_filesize = 2M', line: 'upload_max_filesize = 32M'} 
+    - { regexp: '^session.hash_function = 0', line: 'session.hash_function = sha256'} 
+  tags: php

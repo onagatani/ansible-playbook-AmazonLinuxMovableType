@@ -1,0 +1,24 @@
+server_hostname: "ec2_hostname"
+root_email: "name@example.com"
+s3bucket: bucket-name
+dbbackupdir: db
+mt:
+  ver: MT-6.2.2
+  adminscript: mt.cgi
+  db:
+    name: movabletype
+    user: movabletype
+    passwd: passwd
+  basic:
+    user: 'username'
+    passwd: 'passwd'
+vhosts:
+  - { name: vhost1.example.com }
+  - { name: vhost2.example.com }
+wheel_users:
+  - { name: "username",    password: "ハッシュ化したパスフレーズを入力して下さい",  groups: "wheel" }
+sftp_users:
+  - { name: "username",   password: "ハッシュ化したパスフレーズを入力して下さい", groups: "apache,sftponly" }
+locale: ja_JP.UTF-8
+dbserver: 127.0.0.1
+

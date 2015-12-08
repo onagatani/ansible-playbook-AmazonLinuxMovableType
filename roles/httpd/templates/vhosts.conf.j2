@@ -1,0 +1,25 @@
+<Location "/mt/{{mt.adminscript}}">
+   AuthType Basic
+   AuthName "MovableType"
+   AuthUserFile /var/www/movabletype/basic_passwd
+   Require valid-user
+</Location>
+
+<virtualhost *:80>
+    ServerName   {{ item.name }}
+    DocumentRoot /var/www/vhosts/{{ item.name }}/htdocs
+    ErrorLog     /var/www/vhosts/{{ item.name }}/logs/error_log
+    CustomLog    /var/www/vhosts/{{ item.name }}/logs/access_log combined
+    ScriptAlias  /cgi-bin /var/www/vhosts/{{ item.name }}/cgi-bin
+    Alias        /mt-static /var/www/movabletype/mt-static
+    TraceEnable  Off
+
+    <Directory /var/www/vhosts/{{ item.name }}/htdocs>
+        Options -Indexes FollowSymLinks
+        AllowOverride All
+    </Directory>
+
+    ProxyRequests    Off
+    ProxyPass        /mt/ http://localhost:8080/mt/
+    ProxyPassReverse /mt/ http://localhost:8080/mt/
+</virtualhost>

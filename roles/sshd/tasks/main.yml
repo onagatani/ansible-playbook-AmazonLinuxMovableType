@@ -1,0 +1,58 @@
+- name: replace /etc/sudoers
+  replace: dest=/etc/sudoers regexp='\# \%wheel\s+ALL=\(ALL\)\s+ALL' replace='%wheel        ALL=(ALL)       ALL'
+  tags: sudoers
+
+- name: replace sshd_config
+  replace: dest="/etc/ssh/sshd_config" regexp="{{ item.regexp }}" replace="{{ item.replace }}" 
+  with_items:
+   - { regexp: '^iSubsystem sftp  /usr/libexec/openssh/sftp-server$', replace: 'Subsystem sftp internal-sftp' }
+  tags: sshd
+
+- name: check sshd_config
+  shell: grep 'ChrootDirectory /' /etc/ssh/sshd_config
+  ignore_errors: True
+  register: result_sshd_config
+  tags: sshd
+
+- name: add sshd_config
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    line: "{{ sshd_sftp }}"
+  when: result_sshd_config|failed
+  notify:
+   - restart sshd
+  tags: sshd
+
+- name: add shared groups
+  group: name={{shared_group}} state=present
+  tags: usermod
+
+- name: add sftp groups
+  group: name={{sftponly_group}} state=present
+  tags: usermod
+
+- name: modify apache users
+  user: name=apache group={{shared_group}} groups=apache append=yes
+  tags: usermod
+
+- name: users exist
+  user: name={{item.name}} state=present password={{item.password}} groups={{item.groups}}
+  with_items:
+    - "{{ wheel_users }}"
+    - "{{ sftp_users }}"
+  tags: usermod
+
+- name: modify sftp users
+  user: name={{item.name}} group={{shared_group}} groups={{item.name}}  append=yes
+  with_items: sftp_users
+  tags: usermod
+
+- name: Set up authorized_keys for the deploy user 
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ lookup('file', 'roles/sshd/files/public_keys/' + item.name) }}"
+  with_items:
+    - "{{ wheel_users }}"
+    - "{{ sftp_users }}"
+  tags: authorized_keys
+

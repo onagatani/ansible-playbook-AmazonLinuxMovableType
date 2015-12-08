@@ -1,0 +1,13 @@
+---
+# ImageMagick
+- name: ImageMagick is installed
+  yum: name={{ item }} state=present
+  with_items:
+   - ImageMagick-c++
+   - ImageMagick-c++-devel
+   - ImageMagick-devel
+   - ImageMagick-doc
+   - ImageMagick-perl
+   - compat-ImageMagick
+   - compat-ImageMagick
+  tags: ImageMagick

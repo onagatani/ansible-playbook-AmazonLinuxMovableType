@@ -1,0 +1,60 @@
+- name: set locale to /etc/cloud/cloud.cfg
+  lineinfile: 'dest=/etc/cloud/cloud.cfg line="locale: {{locale}}"'
+  tags: cloud.cfg
+
+- name: set repo_upgrade to /etc/cloud/cloud.cfg
+  lineinfile: 'dest=/etc/cloud/cloud.cfg regexp="repo_upgrade\:" line="repo_upgrade: {{repo_upgrade}}"'
+  tags: cloud.cfg
+
+- name: set cloud-init to /etc/cloud/cloud.cfg
+  replace: >
+    dest=/etc/cloud/cloud.cfg
+    regexp='repo_update: true'
+    replace='repo_upgrade: none'
+  tags: cloud.cfg
+
+- name: check swapfile
+  shell: swapon -s | grep 'swap'
+  ignore_errors: True
+  register: result_swap
+  tags: swap
+
+- name: crete swap
+  command: dd if=/dev/zero of=/mnt/swapfile bs=1M count=1024
+  when: result_swap|failed
+  tags: swap
+
+- name: mkswap
+  command: mkswap /mnt/swapfile
+  when: result_swap|failed
+  tags: swap
+
+- name: swap permissions
+  file: path=/mnt/swapfile owner=root group=root mode=0600
+  when: result_swap|failed
+  tags: swap
+
+- name: swapon swap file
+  command: swapon /mnt/swapfile
+  when: result_swap|failed
+  tags: swap
+
+- name:  mount swap
+  mount: name=swap src=/mnt/swapfile fstype=swap opts=defaults passno=0 dump=0 state=present
+  when: result_swap|failed
+  tags: swap
+
+- name: replace fstab
+  shell: echo="/mnt/swapfile none      swap    sw              0   0 >> /etc/fstab"
+  when: result_swap|failed
+  tags: swap
+
+#ec2 snapshot
+- name: snapshot.py 
+  copy: src="snapshot.py" dest="/usr/local/bin/snapshot.py" owner=root group=root mode=0755
+  tags: ce2snapshot
+
+- name: crontab
+  cron: name='create snapshot' job="/usr/bin/setlock -nx /tmp/snapshot.lock /usr/local/bin/snapshot.py" hour="3" minute="0" user="root" state=present
+  tags: ce2snapshot
+

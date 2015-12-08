@@ -1,0 +1,94 @@
+---
+# httpd
+- name: install the latest version of Apache
+  yum: name={{ item }} state=present
+  with_items:
+   - httpd
+   - httpd-devel
+  tags: httpd
+
+- name: replace httpd.conf servername
+  replace: dest="/etc/httpd/conf/httpd.conf" regexp="{{ item.regexp }}" replace="{{ item.replace }}" 
+  with_items:
+   - { regexp: '^#ServerName www.example.com:80$', replace: 'ServerName {{ vhosts[0].name  }}:80' }
+   - { regexp: '^Group apache$', replace: 'Group {{ shared_group }}' }
+   - { regexp: '^ServerSignature On$', replace: 'ServerSignature Off' }
+   - { regexp: '^ServerTokens OS$', replace: 'ServerTokens Prod' }
+   - { regexp: '^ScriptAlias /cgi-bin/ \"/var/www/cgi-bin/\"$', replace: '#ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"' }
+   - { regexp: '^\#NameVirtualHost \*:80$', replace: 'NameVirtualHost *:80' }
+   - { regexp: '^LoadModule suexec_module modules/mod_suexec.so$', replace: '#LoadModule suexec_module modules/mod_suexec.so' }
+   - { regexp: '^LoadModule proxy_balancer_module modules/mod_proxy_balancer.so$', replace: '#LoadModule proxy_balancer_module modules/mod_proxy_balancer.so' }
+   - { regexp: '^LoadModule userdir_module modules/mod_userdir.so$', replace: '#LoadModule userdir_module modules/mod_userdir.so' }
+   - { regexp: '^LoadModule dav_fs_module modules/mod_dav_fs.so$', replace: '#LoadModule dav_fs_module modules/mod_dav_fs.so' }
+   - { regexp: '^LoadModule dav_module modules/mod_dav.so$', replace: '#LoadModule dav_module modules/mod_dav.so' }
+   - { regexp: '^LoadModule ldap_module modules/mod_ldap.so$', replace: '#LoadModule ldap_module modules/mod_ldap.so' }
+   - { regexp: '^LoadModule authnz_ldap_module modules/mod_authnz_ldap.so$', replace: '#LoadModule authnz_ldap_module modules/mod_authnz_ldap.so' }
+
+   - { regexp: '^Timeout 60$', replace: 'Timeout 300' }
+   - { regexp: '^KeepAlive Off$', replace: 'KeepAlive On' }
+   - { regexp: '^KeepAliveTimeout\s+15$', replace: 'KeepAliveTimeout 120' }
+   - { regexp: '^StartServers\s+8$', replace: 'StartServers       20' }
+   - { regexp: '^MinSpareServers\s+5$', replace: 'MinSpareServers    20' }
+   - { regexp: '^MaxSpareServers\s+20$', replace: 'MaxSpareServers   256' }
+   - { regexp: '^MaxRequestsPerChild\s+4000$', replace: 'MaxRequestsPerChild  2000' }
+  tags: httpd
+
+- name: check sysconfig/httpd
+  shell: grep 'umask 002' /etc/sysconfig/httpd
+  ignore_errors: True
+  register: result_sysconfig_httpd
+  tags: httpd
+
+- name: replace sysconfig/httpd
+  shell: echo "umask 002" >> /etc/sysconfig/httpd
+  tags:  httpd
+  when: result_sysconfig_httpd|failed
+
+- name: httpd is runnning and enabled
+  service: name=httpd state=running enabled=yes
+  tags: httpd
+
+- name: Create Apache configuration file 00
+  template: src=00.setting.conf.j2 dest=/etc/httpd/conf.d/00.setting.conf
+  tags: httpd
+
+- name: Create Apache configuration file 01
+  template: src=01.dummy.conf.j2 dest=/etc/httpd/conf.d/01.dummy.conf
+  with_items: vhosts
+  tags: httpd
+
+- name: Create Apache configuration file vhosts
+  template: src=vhosts.conf.j2 dest=/etc/httpd/conf.d/{{ item.name }}.conf
+  with_items: vhosts
+  tags: httpd
+
+- name: httpd vhosts directory
+  file: path=/var/www/vhosts/{{ item.name }}/ state=directory owner=apache group=contents mode=0775
+  with_items: vhosts
+  tags: httpd
+
+- name: change owner
+  file: path=/var/www/vhosts owner=root group=root mode=0755
+  tags: httpd
+
+- name: httpd vhosts cgi-bin
+  file: path=/var/www/vhosts/{{ item.name }}/cgi-bin/ state=directory owner=apache group=contents mode=0775
+  with_items: vhosts
+  tags: httpd
+
+- name: httpd vhosts htdocs
+  file: path=/var/www/vhosts/{{ item.name }}/htdocs/ state=directory owner=apache group=contents mode=0775
+  with_items: vhosts
+  tags: httpd
+
+- name: httpd vhosts logs
+  file: path=/var/www/vhosts/{{ item.name }}/logs/ state=directory owner=apache group=contents mode=0775
+  with_items: vhosts
+  notify:
+    - restart httpd
+  tags: httpd
+
+- name: logrotate
+  template: src=logrotate.d.vhosts.j2 dest=/etc/logrotate.d/vhosts owner=root group=root mode=0664
+  tags: logrotate
+
