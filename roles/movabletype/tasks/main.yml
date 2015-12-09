@@ -54,3 +54,7 @@
   command: /usr/bin/svc -du /service/movabletype
   tags: movabletype
 
+- name: logrotate
+  template: src=logrotate.d.mt.j2 dest=/etc/logrotate.d/movabletype owner=root group=root mode=0664
+  tags: logrotate
+

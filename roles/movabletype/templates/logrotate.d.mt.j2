@@ -1,4 +1,4 @@
-/var/www/vhosts/*/logs/*log { 
+/var/www/vhosts/*/logs/*log /var/www/movabletype/movableype.log {
     daily
     dateext
     rotate 90
@@ -9,5 +9,6 @@
     sharedscripts
     postrotate
         /sbin/service httpd graceful > /dev/null 2>/dev/null || true
+        /usr/bin/svc -du /service/movabletype > /dev/null 2>/dev/null || true
     endscript
 }
