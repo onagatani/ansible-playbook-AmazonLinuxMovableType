@@ -5,7 +5,7 @@
 - name: replace sshd_config
   replace: dest="/etc/ssh/sshd_config" regexp="{{ item.regexp }}" replace="{{ item.replace }}" 
   with_items:
-   - { regexp: '^iSubsystem sftp  /usr/libexec/openssh/sftp-server$', replace: 'Subsystem sftp internal-sftp' }
+   - { regexp: '^iSubsystem\s+sftp\s+/usr/libexec/openssh/sftp-server$', replace: 'Subsystem sftp internal-sftp' }
   tags: sshd
 
 - name: check sshd_config
