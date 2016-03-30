@@ -38,6 +38,7 @@
     - ncurses-devel
     - net-snmp-devel
     - nmap
+    - openssl
     - openssl-devel
     - perl-ExtUtils-MakeMaker
     - perl-Moose

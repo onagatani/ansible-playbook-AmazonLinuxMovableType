@@ -9,10 +9,8 @@
     - aws
     - httpd
     - php
+    - mysql
     - perl
     - ImageMagick
-    - mysql
     - daemontools
     - movabletype
-
-

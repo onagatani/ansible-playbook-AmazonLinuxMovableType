@@ -1,5 +1,5 @@
 - name: copy MT.zip
-  unarchive: src="{{mt.ver}}.zip" dest=/var/www/ owner=apache group=contents mode=0775 creates=/var/www/movabletype/
+  unarchive: src="{{mt.file}}" dest=/var/www/ owner=apache group=contents mode=0775 creates=/var/www/movabletype/
   tags: movabletype
 
 - name: Move movabletype to mt

@@ -5,7 +5,9 @@
 - name: cpan module installed 
   shell: /usr/local/bin/cpanm {{item}}
   with_items:
-   - Task::Plack
+   - Test::TCP@2.14
+   - Env
+   - File::Which
    - Starman
    - LWP
    - LWP::Protocol::https
@@ -20,8 +22,6 @@
    - IPC::Run
    - Archive::Tar
    - Digest::SHA1
-   - Mail::Sendmail
-   - Mail::POP3Client
    - IO::Stringy
    - XML::Parser
    - XMLRPC::Transport::HTTP::Plack
@@ -35,4 +35,5 @@
    - XML::SAX::ExpatXS
    - XML::LibXML
    - XML::LibXML::SAX
+   - Task::Plack
   tags: perl

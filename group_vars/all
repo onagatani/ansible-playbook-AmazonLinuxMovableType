@@ -3,7 +3,8 @@ root_email: "name@example.com"
 s3bucket: bucket-name
 dbbackupdir: db
 mt:
-  ver: MT-6.2.2
+  file: MT-6_2_4.zip（MTのファイル名に差し替え）
+  ver: MT-6.2.4（MT-xxx.zipの解凍されたフォルダ名）
   adminscript: mt.cgi
   db:
     name: movabletype
@@ -21,4 +22,3 @@ sftp_users:
   - { name: "username",   password: "ハッシュ化したパスフレーズを入力して下さい", groups: "apache,sftponly" }
 locale: ja_JP.UTF-8
 dbserver: 127.0.0.1
-
