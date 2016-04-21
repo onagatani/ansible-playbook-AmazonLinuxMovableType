@@ -1,0 +1,26 @@
+ansible_ssh_private_key_file: "{{ inventory_dir ~ '/private_key_file/' ~ inventory_hostname }}"
+ansible_ssh_user: ec2-user
+server_hostname: "server1.fqdn"
+root_email: "root@example.com"
+#alert_email: "alert@example.com"
+letsencrypt_email: "ssl@example.com"
+s3bucket: bucket-name
+dbbackupdir: db
+mt:
+  file: MT-6.2.4.zip
+  ver: MT-6.2.4
+  adminscript: mt.cgi
+  db:
+    name: movabletype
+    user: movabletype
+    passwd: passwd
+    server: 127.0.0.1
+  basic:
+    user: 'username'
+    passwd: 'passwd'
+vhosts:
+  - { name: server1.fqdn }
+wheel_users:
+  - { name: user,     password: "hash", groups: "wheel" }
+sftp_users:
+  - { name: user,     password: "hash", groups: "apache,sftponly" }
