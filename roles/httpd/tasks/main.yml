@@ -84,11 +84,18 @@
 - name: httpd vhosts logs
   file: path=/var/www/vhosts/{{ item.name }}/logs/ state=directory owner=apache group=contents mode=0775
   with_items: vhosts
-  notify:
-    - restart httpd
+  tags: httpd
+
+- name: delete ssl_conf
+  file: path=/etc/httpd/conf.d/{{item}} state=absent
+  with_items:
+    - ssl.conf
+    - README
+    - welcome.conf
   tags: httpd
 
 - name: logrotate
-  template: src=logrotate.d.vhosts.j2 dest=/etc/logrotate.d/vhosts owner=root group=root mode=0664
-  tags: logrotate
-
+  cron: name='logrotate' job="find /var/www/vhosts/*/logs/ -name '*_log.*' -mtime +30 | xargs rm -rf 1>/dev/null" minute=0 hour=1 state=present
+  notify:
+    - restart httpd
+  tags: httpd

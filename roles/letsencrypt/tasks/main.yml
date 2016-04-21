@@ -1,0 +1,27 @@
+---
+# ssl
+- name: downloaded letsencrypt
+  get_url: url=https://github.com/letsencrypt/letsencrypt/archive/master.zip dest=/tmp/master.zip force=True
+  tags: letsencrypt
+
+- name: copy and unzip files
+  unarchive: src=/tmp/master.zip dest=/opt/ copy=no
+  tags: letsencrypt
+
+- name: auto install
+  shell: /opt/letsencrypt-master/letsencrypt-auto --help --debug
+  tags: letsencrypt
+
+- name: create ssl
+  shell: /opt/letsencrypt-master/letsencrypt-auto certonly --keep-until-expiring --non-interactive --standalone -d {{ item.name }} --agree-tos -m {{ letsencrypt_email }}
+  with_items: vhosts
+  tags: letsencrypt
+
+- name: ssl renew
+  cron: name='letsencrypt-auto-renew' job="/opt/letsencrypt-master/letsencrypt-auto renew --renew-by-default  --webroot -w /var/www/html --force-renew --debug" minute=0 hour=0 day=1 state=present
+  tags: letsencrypt
+
+- name: httpd restart
+  cron: name='ssl-renew-httpd-restart' job="/etc/init.d/httpd restart" minute=10 hour=0 day=1 state=present
+  tags: letsencrypt
+

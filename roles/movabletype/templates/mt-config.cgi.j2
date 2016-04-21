@@ -8,7 +8,7 @@ ObjectDriver         DBI::mysql
 Database             {{ mt.db.name }}
 DBUser               {{ mt.db.user }}
 DBPassword           {{ mt.db.passwd }}
-DBHost               {{ dbserver }}
+DBHost               {{ mt.db.server }}
 
 PIDFilePath          /var/www/movabletype/movabletype.pid
 

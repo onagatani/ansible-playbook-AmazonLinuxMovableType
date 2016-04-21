@@ -5,7 +5,7 @@ mysqldump\
  --defaults-extra-file=/root/.my.cnf\
  --no-autocommit\
  --add-drop-table\
- --host {{ dbserver }}\
+ --host {{ mt.db.server }}\
  --skip-extended-insert\
  --quick\
  --single-transaction\

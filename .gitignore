@@ -1,6 +1,9 @@
 *.bak
 *.old
 *.db
+*.pem
 .swp
 MT*
-public_keys/*
+roles/sshd/files/public_keys/*
+private_key_file/*
+site.retry
