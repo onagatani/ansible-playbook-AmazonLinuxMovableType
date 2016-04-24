@@ -2,10 +2,11 @@ ansible_ssh_private_key_file: "{{ inventory_dir ~ '/private_key_file/' ~ invento
 ansible_ssh_user: ec2-user
 server_hostname: "server1.fqdn"
 root_email: "root@example.com"
-#alert_email: "alert@example.com"
-letsencrypt_email: "ssl@example.com"
 s3bucket: bucket-name
-dbbackupdir: db
+dbbackup: ON
+snapshot: ON
+cloudwatch: ON
+  email: alert@example.com
 mt:
   file: MT-6.2.4.zip
   ver: MT-6.2.4
@@ -19,7 +20,7 @@ mt:
     user: 'username'
     passwd: 'passwd'
 vhosts:
-  - { name: server1.fqdn }
+  - { name: server1.fqdn, letsencrypt: on, email: ssl@example.com}
 wheel_users:
   - { name: user,     password: "hash", groups: "wheel" }
 sftp_users:

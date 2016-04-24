@@ -1,62 +1,61 @@
 - name: set locale to /etc/cloud/cloud.cfg
   lineinfile: 'dest=/etc/cloud/cloud.cfg line="locale: {{locale}}"'
-  tags: cloud.cfg
+  tags: aws
 
 - name: set repo_upgrade to /etc/cloud/cloud.cfg
   lineinfile: 'dest=/etc/cloud/cloud.cfg regexp="repo_upgrade\:" line="repo_upgrade: {{repo_upgrade}}"'
-  tags: cloud.cfg
+  tags: aws
 
 - name: set cloud-init to /etc/cloud/cloud.cfg
-  replace: >
-    dest=/etc/cloud/cloud.cfg
-    regexp='repo_update: true'
-    replace='repo_upgrade: none'
-  tags: cloud.cfg
+  replace: dest=/etc/cloud/cloud.cfg regexp='repo_update: true' replace='repo_upgrade: none'
+  tags: aws
 
 - name: check swapfile
   shell: swapon -s | grep 'swap'
   ignore_errors: True
   register: result_swap
-  tags: swap
+  tags: aws
 
 - name: crete swap
   command: dd if=/dev/zero of=/mnt/swapfile bs=1M count=1024
   when: result_swap|failed
-  tags: swap
+  tags: aws
 
 - name: mkswap
   command: mkswap /mnt/swapfile
   when: result_swap|failed
-  tags: swap
+  tags: aws
 
 - name: swap permissions
   file: path=/mnt/swapfile owner=root group=root mode=0600
   when: result_swap|failed
-  tags: swap
+  tags: aws
 
 - name: swapon swap file
   command: swapon /mnt/swapfile
   when: result_swap|failed
-  tags: swap
+  tags: aws
 
 - name:  mount swap
   mount: name=swap src=/mnt/swapfile fstype=swap opts=defaults passno=0 dump=0 state=present
   when: result_swap|failed
-  tags: swap
+  tags: aws
 
 - name: replace fstab
   shell: echo="/mnt/swapfile none      swap    sw              0   0 >> /etc/fstab"
   when: result_swap|failed
-  tags: swap
+  tags: aws
 
 #ec2 snapshot
 - name: snapshot.py 
   copy: src="snapshot.py" dest="/usr/local/bin/snapshot.py" owner=root group=root mode=0755
-  tags: ce2snapshot
+  when: snapshot == 'ON'
+  tags: aws
 
 - name: crontab
   cron: name='create snapshot' job="/usr/bin/setlock -nx /tmp/snapshot.lock /usr/local/bin/snapshot.py" hour="3" minute="0" user="root" state=present
-  tags: ce2snapshot
+  when: snapshot == 'ON'
+  tags: aws
 
 - name: aws configure directory
   file: path=/root/.aws state=directory owner=root group=root mode=0755
@@ -66,7 +65,8 @@
   template: src=.aws_config.j2 dest=/root/.aws/config owner=root mode=0600
   tags: aws
 
-#- name: cloudwatch
-#  shell: curl -L https://raw.githubusercontent.com/onagatani/cloudwatch-create-alarm/master/cloudwatch-create-alarm | bash /dev/stdin -a {{ server_hostname }} -t {{ server_hostname }} -e {{ alert_email }}
-#  tags: aws
+- name: cloudwatch
+  shell: curl -L https://raw.githubusercontent.com/onagatani/cloudwatch-create-alarm/master/cloudwatch-create-alarm | bash /dev/stdin -a {{ server_hostname }} -t {{ server_hostname }} -e {{ cloudwatch.email }}
+  when: cloudwatch == 'ON'
+  tags: aws
   

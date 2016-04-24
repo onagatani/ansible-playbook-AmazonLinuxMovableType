@@ -14,7 +14,7 @@ mysqldump\
  --ignore-table=mysql.event\
  --all-databases | /usr/bin/gzip > /tmp/mysqldump.$DATE.sql.gz
 
-aws s3 cp /tmp/mysqldump.$DATE.sql.gz s3://{{ s3bucket }}/{{ dbbackupdir }}/
+aws s3 cp /tmp/mysqldump.$DATE.sql.gz s3://{{ s3bucket }}/dbbackup/
 
 rm -rf /tmp/mysqldump.$DATE.sql.gz
 
