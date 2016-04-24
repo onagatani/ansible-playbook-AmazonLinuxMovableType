@@ -52,9 +52,12 @@
   template: src=00.setting.conf.j2 dest=/etc/httpd/conf.d/00.setting.conf
   tags: httpd
 
-- name: Create Apache configuration file 01
+- name: Create vhost.dummy configuration file 01
   template: src=01.dummy.conf.j2 dest=/etc/httpd/conf.d/01.dummy.conf
-  with_items: vhosts
+  tags: httpd
+
+- name: Create ssl configuration file 02
+  template: src=02.ssl.conf.j2 dest=/etc/httpd/conf.d/02.ssl.conf
   tags: httpd
 
 - name: Create Apache configuration file vhosts
