@@ -1,6 +1,6 @@
 ---
 - name: Install Movable Type, MySQL, Apache, Starman(PSGI), and PHP5 
-  hosts: movabletype-server
+  hosts: all 
   gather_facts: True
   roles:
     - common
