@@ -19,7 +19,7 @@
   tags: letsencrypt
 
 - name: ssl renew
-  cron: name="letsencrypt auto renew {{ item.name }}" job="/opt/letsencrypt-master/letsencrypt-auto renew --renew-by-default  --webroot -w /var/www/vhosts/{{ item.name }}/htdocs/ --force-renew --debug" minute=0 hour=0 day=1 state=present
+  cron: name="letsencrypt auto renew {{ item.name }}" job="/opt/letsencrypt-master/letsencrypt-auto certonly  --renew-by-default --webroot -w /var/www/vhosts/{{ item.name }}/htdocs -d {{ item.name }}" minute=0 hour=0 day=1 state=present
   when: item.letsencrypt == 'ON'
   with_items: vhosts
   tags: letsencrypt
