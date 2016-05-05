@@ -11,3 +11,10 @@
    - compat-ImageMagick
    - compat-ImageMagick
   tags: ImageMagick
+
+- name: insert "Policymap" configuation block in /etc/ImageMagick/policy.xml
+  blockinfile:
+    dest: /etc/ImageMagick/policy.xml
+    block: "{{ policymap }}"
+  tags: ImageMagick
+
