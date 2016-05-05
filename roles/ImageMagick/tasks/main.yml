@@ -6,9 +6,7 @@
    - ImageMagick-c++
    - ImageMagick-c++-devel
    - ImageMagick-devel
-   - ImageMagick-doc
    - ImageMagick-perl
-   - compat-ImageMagick
    - compat-ImageMagick
   tags: ImageMagick
 

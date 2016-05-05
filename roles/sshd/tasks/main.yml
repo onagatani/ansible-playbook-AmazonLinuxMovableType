@@ -1,6 +1,6 @@
 - name: replace /etc/sudoers
   replace: dest=/etc/sudoers regexp='\# \%wheel\s+ALL=\(ALL\)\s+ALL' replace='%wheel        ALL=(ALL)       ALL'
-  tags: sudoers
+  tags: sshd
 
 - name: replace sshd_config
   replace: dest="/etc/ssh/sshd_config" regexp="{{ item.regexp }}" replace="{{ item.replace }}" 
@@ -8,44 +8,37 @@
    - { regexp: '^Subsystem\s+sftp\s+/usr/libexec/openssh/sftp-server$', replace: 'Subsystem sftp internal-sftp' }
   tags: sshd
 
-- name: check sshd_config
-  shell: grep 'ChrootDirectory /' /etc/ssh/sshd_config
-  ignore_errors: True
-  register: result_sshd_config
-  tags: sshd
-
-- name: add sshd_config
-  lineinfile:
+- name: insert sshd configuation block in /etc/sshd_config
+  blockinfile:
     dest: /etc/ssh/sshd_config
-    line: "{{ sshd_sftp }}"
-  when: result_sshd_config|failed
+    block: "{{ sshd_sftp }}"
   notify:
    - restart sshd
   tags: sshd
 
 - name: add shared groups
   group: name={{shared_group}} state=present
-  tags: usermod
+  tags: sshd
 
 - name: add sftp groups
   group: name={{sftponly_group}} state=present
-  tags: usermod
+  tags: sshd
 
 - name: modify apache users
   user: name=apache group={{shared_group}} groups=apache append=yes
-  tags: usermod
+  tags: sshd
 
 - name: users exist
   user: name={{item.name}} state=present password={{item.password}} groups={{item.groups}}
   with_items:
     - "{{ wheel_users }}"
     - "{{ sftp_users }}"
-  tags: usermod
+  tags: sshd
 
 - name: modify sftp users
   user: name={{item.name}} group={{shared_group}} groups={{item.name}}  append=yes
   with_items: sftp_users
-  tags: usermod
+  tags: sshd
 
 - name: Set up authorized_keys for the deploy user 
   authorized_key:
@@ -54,5 +47,5 @@
   with_items:
     - "{{ wheel_users }}"
     - "{{ sftp_users }}"
-  tags: authorized_keys
+  tags: sshd
 
