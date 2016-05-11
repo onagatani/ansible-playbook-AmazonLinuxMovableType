@@ -9,17 +9,17 @@
   tags: letsencrypt
 
 - name: auto install
-  shell: /opt/letsencrypt-master/letsencrypt-auto --help --debug
+  shell: /opt/certbot-master/letsencrypt-auto --help --debug
   tags: letsencrypt
 
 - name: create ssl
-  shell: /opt/letsencrypt-master/letsencrypt-auto certonly --keep-until-expiring --non-interactive --standalone -d {{ item.name }} --agree-tos -m {{ item.email }}
+  shell: /opt/certbot-master/letsencrypt-auto certonly --keep-until-expiring --non-interactive --standalone -d {{ item.name }} --agree-tos -m {{ item.email }}
   when: item.letsencrypt == 'ON'
   with_items: vhosts
   tags: letsencrypt
 
 - name: ssl renew
-  cron: name="letsencrypt auto renew {{ item.name }}" job="/opt/letsencrypt-master/letsencrypt-auto certonly  --renew-by-default --webroot -w /var/www/vhosts/{{ item.name }}/htdocs -d {{ item.name }}" minute=0 hour=0 day=1 state=present
+  cron: name="letsencrypt auto renew {{ item.name }}" job="/opt/certbot-master/letsencrypt-auto certonly  --renew-by-default --webroot -w /var/www/vhosts/{{ item.name }}/htdocs -d {{ item.name }}" minute=0 hour=0 day=1 state=present
   when: item.letsencrypt == 'ON'
   with_items: vhosts
   tags: letsencrypt
