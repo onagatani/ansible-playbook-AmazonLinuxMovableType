@@ -10,7 +10,7 @@
 - name: replace httpd.conf servername
   replace: dest="/etc/httpd/conf/httpd.conf" regexp="{{ item.regexp }}" replace="{{ item.replace }}" 
   with_items: httpd_conf
- tags: httpd
+  tags: httpd
 
 - name: check sysconfig/httpd
   shell: grep 'umask 002' /etc/sysconfig/httpd
@@ -73,7 +73,7 @@
   tags: httpd
 
 - name: compress the log
-  cron: name='logrotate' job="find /var/www/vhosts/*/logs/ -type f ! -name "*`date +%Y%m%d`*" ! -name "*.gz" -print0 | xargs -0 gzip 1>/dev/null" minute=0 hour=1 state=present
+  cron: name='logrotate' job="find /var/www/vhosts/*/logs/ -type f ! -name '*`date +%Y%m%d`*' ! -name '*.gz' -print0 | xargs -0 gzip 1>/dev/null" minute=0 hour=1 state=present
   tags: httpd
 
 - name: delete the log

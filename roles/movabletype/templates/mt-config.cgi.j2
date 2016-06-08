@@ -1,4 +1,3 @@
-AdminScript          {{ mt.adminscript }}
 AdminCGIPath         /mt/
 CGIPath              /mt/
 StaticWebPath        /mt-static/
@@ -24,8 +23,6 @@ HTMLUmask            0002
 UploadUmask          0002
 DirUmask             0002
 
-SearchThrottleSeconds 300
-SearchCacheTTL 300
-SearchMaxResults 100
-
-LocalPreviews 1
+{% for c in mt.config %}
+{{ c.name}}    {{ c.value }}
+{% endfor %}

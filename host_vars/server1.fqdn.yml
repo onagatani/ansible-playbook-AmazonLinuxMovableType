@@ -16,6 +16,9 @@ mt:
   plugins: 
     - { name: PSGIRestart }
     - { name: PageBute }
+  static: 
+    - { name: PSGIRestart }
+    - { name: PageBute }
   db:
     name: movabletype
     user: movabletype

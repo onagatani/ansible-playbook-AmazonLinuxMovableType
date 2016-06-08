@@ -1,4 +1,4 @@
-https_conf:
+httpd_conf:
    - { regexp: '^#ServerName www.example.com:80$', replace: 'ServerName {{ vhosts[0].name  }}:80' }
    - { regexp: '^Group apache$', replace: 'Group {{ shared_group }}' }
    - { regexp: '^ServerSignature On$', replace: 'ServerSignature Off' }

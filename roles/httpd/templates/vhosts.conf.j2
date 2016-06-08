@@ -16,7 +16,7 @@
         AllowOverride All
     </Directory>
 
-    <Location "/">
+    <Location "/mt/{{ mt.config.AdminScript }}">
         AuthType Basic
         AuthName "MovableType"
         AuthUserFile /var/www/movabletype/basic_passwd
@@ -53,13 +53,9 @@
         AllowOverride All
     </Directory>
 
-    RewriteEngine On
-    RewriteCond   %{REQUEST_METHOD} ^TRACE
-    RewriteRule   .*    -       [F]
-
     RequestHeader set X_FORWARDED_PROTO "https"
 
-    <Location "/">
+    <Location "/mt/{{ mt.config.AdminScript }}">
         AuthType Basic
         AuthName "MovableType"
         AuthUserFile /var/www/movabletype/basic_passwd
