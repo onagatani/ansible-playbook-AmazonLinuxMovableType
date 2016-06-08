@@ -7,21 +7,30 @@
     Alias        /mt-static /var/www/movabletype/mt-static
     TraceEnable  Off
 
+{% if mt.psgi != 'ON' %}
+    ScriptAlias  /mt /var/www/movabletype
+{% endif %}
+
     <Directory /var/www/vhosts/{{ item.name }}/htdocs>
         Options -Indexes FollowSymLinks
         AllowOverride All
     </Directory>
 
-    <Location "/mt/{{mt.adminscript}}">
+    <Location "/">
         AuthType Basic
         AuthName "MovableType"
         AuthUserFile /var/www/movabletype/basic_passwd
         Require valid-user
     </Location>
 
+{% if mt.psgi == 'ON' %}
+
     ProxyRequests    Off
     ProxyPass        /mt/ http://localhost:8080/mt/
     ProxyPassReverse /mt/ http://localhost:8080/mt/
+
+{% endif %}
+
 </virtualhost>
 
 {% if item.letsencrypt == 'ON' %}
@@ -35,6 +44,10 @@
     Alias        /mt-static /var/www/movabletype/mt-static
     TraceEnable  Off
 
+{% if mt.psgi != 'ON' %}
+    ScriptAlias  /mt /var/www/movabletype
+{% endif %}
+
     <Directory /var/www/vhosts/{{ item.name }}/htdocs>
         Options -Indexes FollowSymLinks
         AllowOverride All
@@ -46,16 +59,20 @@
 
     RequestHeader set X_FORWARDED_PROTO "https"
 
-    <Location "/mt/{{mt.adminscript}}">
+    <Location "/">
         AuthType Basic
         AuthName "MovableType"
         AuthUserFile /var/www/movabletype/basic_passwd
         Require valid-user
     </Location>
 
+{% if mt.psgi == 'ON' %}
+
     ProxyRequests    Off
     ProxyPass        /mt/ http://localhost:8080/mt/
     ProxyPassReverse /mt/ http://localhost:8080/mt/
+
+{% endif %}
 
     SSLEngine on
     SSLProtocol All -SSLv3

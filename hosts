@@ -1,2 +1,4 @@
-[movabletype-server]
+[group1]
 server1.fqdn
+[group2]
+server2.fqdn

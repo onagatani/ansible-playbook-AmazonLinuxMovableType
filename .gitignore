@@ -2,7 +2,7 @@
 *.old
 *.db
 *.pem
-.swp
+*.swp
 MT*
 roles/sshd/files/public_keys/*
 private_key_file/*

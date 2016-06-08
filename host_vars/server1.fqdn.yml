@@ -10,7 +10,12 @@ alert_email: alert@example.com
 mt:
   file: MT-6.2.4.zip
   ver: MT-6.2.4
-  adminscript: mt.cgi
+  psgi: 'ON'
+  config: 
+    - { name: 'AdminScript', value: 'mt.cgi'}
+  plugins: 
+    - { name: PSGIRestart }
+    - { name: PageBute }
   db:
     name: movabletype
     user: movabletype
@@ -20,8 +25,10 @@ mt:
     user: 'username'
     passwd: 'passwd'
 vhosts:
-  - { name: server1.fqdn, letsencrypt: 'ON', email: ssl@example.com}
+  - { name: server1.fqdn, letsencrypt: 'ON', email: ssl@example.com }
 wheel_users:
-  - { name: user,     password: "hash", groups: "wheel" }
+  - { name: user,     password: "hash" }
+ssh_users:
+  - { name: user,     password: "hash" }
 sftp_users:
-  - { name: user,     password: "hash", groups: "apache,sftponly" }
+  - { name: user,     password: "hash" }

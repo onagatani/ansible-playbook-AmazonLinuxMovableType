@@ -34,6 +34,7 @@
 
 - name: svscan start
   service: name=svscan state=started enabled=yes
+  when: mt.psgi == 'ON' and result|failed
   tags: daemontools
 
 # http://blog.hansode.org/archives/51311837.html

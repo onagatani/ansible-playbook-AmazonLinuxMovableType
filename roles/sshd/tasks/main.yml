@@ -1,12 +1,12 @@
 - name: replace /etc/sudoers
   replace: dest=/etc/sudoers regexp='\# \%wheel\s+ALL=\(ALL\)\s+ALL' replace='%wheel        ALL=(ALL)       ALL'
-  tags: sshd
+  tags: ssh
 
 - name: replace sshd_config
   replace: dest="/etc/ssh/sshd_config" regexp="{{ item.regexp }}" replace="{{ item.replace }}" 
   with_items:
    - { regexp: '^Subsystem\s+sftp\s+/usr/libexec/openssh/sftp-server$', replace: 'Subsystem sftp internal-sftp' }
-  tags: sshd
+  tags: ssh
 
 - name: insert sshd configuation block in /etc/sshd_config
   blockinfile:
@@ -14,31 +14,36 @@
     block: "{{ sshd_sftp }}"
   notify:
    - restart sshd
-  tags: sshd
+  tags: ssh
 
-- name: add shared groups
-  group: name={{shared_group}} state=present
-  tags: sshd
-
-- name: add sftp groups
-  group: name={{sftponly_group}} state=present
-  tags: sshd
+- name: add ssh groups
+  group: name={{ item }} state=present
+  with_items:
+    - "{{shared_group}}"
+    - "{{sftponly_group}}"
+  tags: ssh
 
 - name: modify apache users
   user: name=apache group={{shared_group}} groups=apache append=yes
-  tags: sshd
+  tags: ssh
 
-- name: users exist
-  user: name={{item.name}} state=present password={{item.password}} groups={{item.groups}}
+- name: users exist - wheel
+  user: name={{item.name}} state=present password={{item.password}} groups=wheel
   with_items:
     - "{{ wheel_users }}"
-    - "{{ sftp_users }}"
-  tags: sshd
+  tags: ssh
 
-- name: modify sftp users
-  user: name={{item.name}} group={{shared_group}} groups={{item.name}}  append=yes
-  with_items: sftp_users
-  tags: sshd
+- name: users exist - ssh
+  user: name={{item.name}} state=present password={{item.password}} groups=apache,{{ shared_group }}
+  with_items:
+    - "{{ ssh_users }}"
+  tags: ssh
+
+- name: users exist - sftp
+  user: name={{item.name}} state=present password={{item.password}} groups=apache,{{ shared_group }},{{ sftponly_group }}
+  with_items:
+    - "{{ sftp_users }}"
+  tags: ssh
 
 - name: Set up authorized_keys for the deploy user 
   authorized_key:
@@ -46,6 +51,6 @@
     key: "{{ lookup('file', 'roles/sshd/files/public_keys/' + item.name) }}"
   with_items:
     - "{{ wheel_users }}"
+    - "{{ ssh_users }}"
     - "{{ sftp_users }}"
-  tags: sshd
-
+  tags: ssh
