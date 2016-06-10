@@ -7,17 +7,17 @@
   tags: movabletype
 
 - name: Install the mt-plugins
-  copy: src="mt-plugins/{{ item.name }}" dest="/var/www/movabletype/plugins/{{ item.name }}" owner=apache group=contents mode=0775
+  copy: src="mt-plugins/{{ item }}" dest="/var/www/movabletype/plugins/{{ item }}" owner=apache group=contents mode=0775
   when: mt.plugins is defined
   with_items:
     - "{{ mt.plugins }}"
   tags: movabletype
 
 - name: Install the mt-static
-  copy: src="mt-static/{{ item.name }}" dest="/var/www/movabletype/mt-static/{{ item.name }}" owner=apache group=contents mode=0775
+  copy: src="mt-static/{{ item }}" dest="/var/www/movabletype/mt-static/{{ item }}" owner=apache group=contents mode=0775
   when: mt.static is defined
   with_items:
-    - "{{ mt.plugins }}"
+    - "{{ mt.static }}"
   tags: movabletype
 
 - name: replace mt-config

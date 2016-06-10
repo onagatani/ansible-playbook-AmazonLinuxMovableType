@@ -3,9 +3,9 @@ ansible_ssh_user: ec2-user
 server_hostname: "server1.fqdn"
 root_email: "root@example.com"
 s3bucket: bucket-name
-dbbackup: 'ON'
-snapshot: 'ON'
-cloudwatch: 'ON'
+dbbackup: 'OFF'
+snapshot: 'OFF'
+cloudwatch: 'OFF'
 alert_email: alert@example.com
 mt:
   file: MT-6.2.4.zip
@@ -14,11 +14,11 @@ mt:
   config: 
     - { name: 'AdminScript', value: 'mt.cgi'}
   plugins: 
-    - { name: PSGIRestart }
-    - { name: PageBute }
+    - PSGIRestart
+    - PageBute
   static: 
-    - { name: PSGIRestart }
-    - { name: PageBute }
+    - PSGIRestart
+    - PageBute
   db:
     name: movabletype
     user: movabletype
