@@ -53,7 +53,7 @@
         AllowOverride All
     </Directory>
 
-    RequestHeader set X_FORWARDED_PROTO "https"
+    #RequestHeader set X_FORWARDED_PROTO "https"
 
     <Location "/mt/{{ mt.config.AdminScript }}">
         AuthType Basic
