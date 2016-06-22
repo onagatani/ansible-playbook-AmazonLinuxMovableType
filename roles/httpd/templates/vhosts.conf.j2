@@ -7,7 +7,7 @@
     Alias        /mt-static /var/www/movabletype/mt-static
     TraceEnable  Off
 
-{% if mt.psgi != yes %}
+{% if mt.psgi is not defined %}
     ScriptAlias  /mt /var/www/movabletype
 {% endif %}
 
@@ -23,7 +23,7 @@
         Require valid-user
     </Location>
 
-{% if mt.psgi == yes %}
+{% if mt.psgi is defined %}
 
     ProxyRequests    Off
     ProxyPass        /mt/ http://localhost:8080/mt/
@@ -33,7 +33,7 @@
 
 </virtualhost>
 
-{% if item.letsencrypt == yes %}
+{% if item.letsencrypt is defined %}
 
 <VirtualHost *:443>
     ServerName   {{ item.name }}
@@ -44,7 +44,7 @@
     Alias        /mt-static /var/www/movabletype/mt-static
     TraceEnable  Off
 
-{% if mt.psgi != yes %}
+{% if mt.psgi is not defined %}
     ScriptAlias  /mt /var/www/movabletype
 {% endif %}
 
@@ -62,7 +62,7 @@
         Require valid-user
     </Location>
 
-{% if mt.psgi == yes %}
+{% if mt.psgi is defined %}
 
     ProxyRequests    Off
     ProxyPass        /mt/ http://localhost:8080/mt/

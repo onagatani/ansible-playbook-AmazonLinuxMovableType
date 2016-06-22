@@ -4,20 +4,20 @@ use warnings;
 use base qw( MT::Plugin );
 
 our $PLUGIN_NAME = 'PSGIRestart';
-our $VERSIyes = '0.01';
+our $VERSION = '0.01';
 
-my $DESCRIPTIyes =<<__HTML__;
+my $DESCRIPTION =<<__HTML__;
 <__trans phrase="PSGI Restart">
 __HTML__
 
 my $plugin = __PACKAGE__->new({
     name           => $PLUGIN_NAME,
-    version        => $VERSIyes,
+    version        => $VERSION,
     key            => lc $PLUGIN_NAME,
     id             => lc $PLUGIN_NAME,
     author_name    => 'onagatani',
     author_link    => 'https://github.com/onagatani/ansible-playbook-AmazonLinuxMovableType',
-    description    => $DESCRIPTIyes,
+    description    => $DESCRIPTION,
     l10n_class     => $PLUGIN_NAME. '::L10N',
 });
 

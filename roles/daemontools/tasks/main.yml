@@ -34,10 +34,10 @@
 
 - name: svscan start
   service: name=svscan state=started enabled=yes
-  when: mt.psgi == yes and result|failed
+  when: mt.psgi is defined and result|failed
   tags: daemontools
 
 # http://blog.hansode.org/archives/51311837.html
 - name: copy addsv
   copy: src=addsv.sh dest=/usr/local/bin/addsv.sh owner=root group=root mode=0755
-  tags: addsv
+  tags: daemontools
