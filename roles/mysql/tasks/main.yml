@@ -57,5 +57,5 @@
 
 - name: crontab mysqlbackup
   cron: name='mysqlbackup' job="/usr/bin/setlock -nx /tmp/mysqlbackup.lock /usr/local/bin/mysqlbackup.sh" hour="5" minute="0" user="root" state=present
-  when: dbbackup == 'ON'
+  when: dbbackup == yes
   tags: mysql

@@ -1,9 +1,9 @@
 package MT::Plugin::PageBute;
 use strict;
 
-use vars qw( $MYNAME $VERSION );
+use vars qw( $MYNAME $VERSIyes );
 $MYNAME = 'PageBute';
-$VERSION = '3.5.7';
+$VERSIyes = '3.5.7';
 
 use POSIX qw( ceil );
 use File::Basename;
@@ -17,7 +17,7 @@ my $plugin = __PACKAGE__->new({
     id => $MYNAME,
     key => $MYNAME,
     name => $MYNAME,
-    version => $VERSION,
+    version => $VERSIyes,
     author_name => 'SKYARC System Co.,Ltd.',
     author_link => 'http://www.skyarc.co.jp/',
     doc_link => 'http://www.skyarc.co.jp/engineerblog/entry/2642.html',
@@ -77,7 +77,7 @@ sub init_registry {
     });
 }
 my %garbage = (
-     PAGINATION        => '<!-- Pagination for PageBute -->',
+     PAGINATIyes        => '<!-- Pagination for PageBute -->',
      PAGEAFTER         => '<!-- AfterLink for PageBute -->',
      PAGEBEFORE        => '<!-- BeforeLink for PageBute -->',
      PAGEFIRST         => '<!-- FirstLink for PageBute -->',
@@ -85,10 +85,10 @@ my %garbage = (
      Separator         => '<!-- Separator for PageBute -->',
      PageLists         => '<!-- PageLists for PageBute -->',
      Contents          => '<!-- Contents for PageBute -->',
-     PAGECONTENTSHEADER        => '<!-- PageHeader for PageBute -->',
-     PAGECONTENTSHEADER_END    => '<!-- PageHeader end for PageBute -->',
-     PAGECONTENTSFOOTER        => '<!-- PageFooter for PageBute -->',
-     PAGECONTENTSFOOTER_END    => '<!-- PageFooter end for PageBute -->',
+     PAGECyesTENTSHEADER        => '<!-- PageHeader for PageBute -->',
+     PAGECyesTENTSHEADER_END    => '<!-- PageHeader end for PageBute -->',
+     PAGECyesTENTSFOOTER        => '<!-- PageFooter for PageBute -->',
+     PAGECyesTENTSFOOTER_END    => '<!-- PageFooter end for PageBute -->',
      PAGECOUNT         => '<!-- PageCount for PageBute -->',
      PAGEMAXCOUNT      => '<!-- PageMaxCount for PageBute -->',
      IFPAGEAFTER       => '<!-- PageIfAfter for PageBute -->',
@@ -125,7 +125,7 @@ sub _pagination {
 
 sub _pagination_execute {
    my ( $ctx, $is_dynamic, $page, $min, $max, $first, $last, $base_link, $suffix, $output )=@_;
-   my $tag = 'PAGINATION';
+   my $tag = 'PAGINATIyes';
    my $pb = $ctx->stash('PageBute');
    my $tokens = $pb->{lc $tag . '_tokens'} || '';
    unless ( $tokens ) {
@@ -478,11 +478,11 @@ sub _page_bute {
 
             #header
             $loop
-                ? $entries[$i] =~ s/\Q$garbage{PAGECONTENTSHEADER}\E[\s\S]*?\Q$garbage{PAGECONTENTSHEADER_END}\E//g
-                : $entries[$i] =~ s/\Q$garbage{PAGECONTENTSHEADER}\E|\Q$garbage{PAGECONTENTSHEADER_END}\E//g;
+                ? $entries[$i] =~ s/\Q$garbage{PAGECyesTENTSHEADER}\E[\s\S]*?\Q$garbage{PAGECyesTENTSHEADER_END}\E//g
+                : $entries[$i] =~ s/\Q$garbage{PAGECyesTENTSHEADER}\E|\Q$garbage{PAGECyesTENTSHEADER_END}\E//g;
 
             #footer
-            $entries[$i] =~ s/\Q$garbage{PAGECONTENTSFOOTER}\E|\Q$garbage{PAGECONTENTSFOOTER_END}\E//g;
+            $entries[$i] =~ s/\Q$garbage{PAGECyesTENTSFOOTER}\E|\Q$garbage{PAGECyesTENTSFOOTER_END}\E//g;
             $output_page_contents .= $entries[$i];
 
 
@@ -590,10 +590,10 @@ sub _page_bute {
         }else{
             #header
             $loop
-                ? $entries[$i] =~ s/\Q$garbage{PAGECONTENTSHEADER}\E[\s\S]*?\Q$garbage{PAGECONTENTSHEADER_END}\E//g
-                : $entries[$i] =~ s/\Q$garbage{PAGECONTENTSHEADER}\E|\Q$garbage{PAGECONTENTSHEADER_END}\E//g;
+                ? $entries[$i] =~ s/\Q$garbage{PAGECyesTENTSHEADER}\E[\s\S]*?\Q$garbage{PAGECyesTENTSHEADER_END}\E//g
+                : $entries[$i] =~ s/\Q$garbage{PAGECyesTENTSHEADER}\E|\Q$garbage{PAGECyesTENTSHEADER_END}\E//g;
             #footer
-            $entries[$i] =~ s/\Q$garbage{PAGECONTENTSFOOTER}\E[\s\S]*?\Q$garbage{PAGECONTENTSFOOTER_END}\E//g;
+            $entries[$i] =~ s/\Q$garbage{PAGECyesTENTSFOOTER}\E[\s\S]*?\Q$garbage{PAGECyesTENTSFOOTER_END}\E//g;
             $output_page_contents .= $entries[$i];
         }
         $loop = 0 if ++$loop >= $split_count;
@@ -741,12 +741,12 @@ sub _page_bute_cgi {
     my $last  = $start + ( $count - 1);
     $last = $entry_count - 1 if $last >= $entry_count;
 
-    $entries[ $start ] =~ s/\Q$garbage{PAGECONTENTSHEADER}\E|\Q$garbage{PAGECONTENTSHEADER_END}\E//g;
-    $entries[ $last ]  =~ s/\Q$garbage{PAGECONTENTSFOOTER}\E|\Q$garbage{PAGECONTENTSFOOTER_END}\E//g;
+    $entries[ $start ] =~ s/\Q$garbage{PAGECyesTENTSHEADER}\E|\Q$garbage{PAGECyesTENTSHEADER_END}\E//g;
+    $entries[ $last ]  =~ s/\Q$garbage{PAGECyesTENTSFOOTER}\E|\Q$garbage{PAGECyesTENTSFOOTER_END}\E//g;
 
     for my $outbuff ( @entries[ $start..$last ] ){
-        $outbuff =~ s/\Q$garbage{PAGECONTENTSHEADER}\E[\s\S]*?\Q$garbage{PAGECONTENTSHEADER_END}\E//g;
-        $outbuff =~ s/\Q$garbage{PAGECONTENTSFOOTER}\E[\s\S]*?\Q$garbage{PAGECONTENTSFOOTER_END}\E//g;
+        $outbuff =~ s/\Q$garbage{PAGECyesTENTSHEADER}\E[\s\S]*?\Q$garbage{PAGECyesTENTSHEADER_END}\E//g;
+        $outbuff =~ s/\Q$garbage{PAGECyesTENTSFOOTER}\E[\s\S]*?\Q$garbage{PAGECyesTENTSFOOTER_END}\E//g;
         $out .= $outbuff;
     }
     $contents =~ s/$garbage{Contents}/$out/g;

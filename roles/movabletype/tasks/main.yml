@@ -32,7 +32,7 @@
 
 - name: addsv movabletype
   shell: /usr/local/bin/addsv.sh movabletype
-  when: mt.psgi == 'ON' and result_service_mt|failed
+  when: mt.psgi == yes and result_service_mt|failed
   tags: movabletype
 
 - name: replace run
@@ -40,12 +40,12 @@
     dest='/service/.movabletype/run'
     regexp='^sleep 3$'
     replace='{{ runfile }}'
-  when: mt.psgi == 'ON' and result_service_mt|failed
+  when: mt.psgi == yes and result_service_mt|failed
   tags: movabletype
 
 - name: Move .movabletype to movabletype
   command: creates="/service/movabletype" mv /service/.movabletype /service/movabletype
-  when: mt.psgi == 'ON'
+  when: mt.psgi == yes
   tags: movabletype
 
 - name: set run-periodic-tasks
@@ -59,7 +59,7 @@
 
 - name: restart mt
   command: /usr/bin/svc -du /service/movabletype
-  when: mt.psgi == 'ON'
+  when: mt.psgi == yes
   tags: movabletype
 
 - name: logrotate

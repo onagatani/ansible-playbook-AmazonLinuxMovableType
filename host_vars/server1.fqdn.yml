@@ -3,14 +3,14 @@ ansible_ssh_user: ec2-user
 server_hostname: "server1.fqdn"
 root_email: "root@example.com"
 s3bucket: bucket-name
-dbbackup: 'OFF'
-snapshot: 'OFF'
-cloudwatch: 'OFF'
+dbbackup: no
+snapshot: no
+cloudwatch: no
 alert_email: alert@example.com
 mt:
   file: MT-6.2.4.zip
   ver: MT-6.2.4
-  psgi: 'ON'
+  psgi: yes
   config: 
     - { name: 'AdminScript', value: 'mt.cgi'}
   plugins: 
@@ -28,7 +28,7 @@ mt:
     user: 'username'
     passwd: 'passwd'
 vhosts:
-  - { name: server1.fqdn, letsencrypt: 'ON', email: ssl@example.com }
+  - { name: server1.fqdn, letsencrypt: yes, email: ssl@example.com }
 wheel_users:
   - { name: user,     password: "hash" }
 ssh_users:

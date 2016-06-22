@@ -13,7 +13,7 @@ region = res.read().split(".")[1]
 
 ec2 = boto.ec2.connect_to_region(region)
 
-instances = [i for r in ec2.get_all_instances(filters={'tag-key':'backup', 'tag-value':'ON'}) for i in r.instances]
+instances = [i for r in ec2.get_all_instances(filters={'tag-key':'backup', 'tag-value':yes}) for i in r.instances]
 
 for instance in instances:
   print "backup instance: %s" % instance.id
