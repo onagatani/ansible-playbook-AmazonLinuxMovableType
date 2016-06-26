@@ -79,7 +79,7 @@
   tags: httpd
 
 - name: compress the log
-  cron: name='compress the log' job="find /var/www/vhosts/*/logs/ -type f ! -name \"*`date +%Y%m%d`*\" ! -name \"*.gz\" -print0 | xargs -0 gzip 1>/dev/null" minute=1 hour=0 state=present
+  cron: name='compress the log' job="find /var/www/vhosts/*/logs/ -type f ! -name \"*`date +\\%Y\\%m\\%d`*\" ! -name \"*.gz\" -print0 | xargs -0 gzip 1>/dev/null" minute=1 hour=0 state=present
   tags: httpd
 
 - name: delete the log
