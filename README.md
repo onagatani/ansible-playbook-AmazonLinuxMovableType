@@ -1,9 +1,9 @@
 # ansible-playbook-AmazonLinuxMovableType
 Use Ansible to provision a full-stack MovableType PSGI Server  
   
-- v1.0.0
--- Now Supported In Let's Encrypt  
-
+# This project was transferred to the following project  
+Https://github.com/izanami-team/IZANAMI  
+  
 # How to Use
 *ansible-playbook -s -i hosts site.yml --extra-vars "mysql_root_password=passwd"*
 
